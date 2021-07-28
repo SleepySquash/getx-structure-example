@@ -14,9 +14,17 @@ class AuthService extends GetxController with StateMixin<String> {
   void onInit() async {
     super.onInit();
 
+    ever(
+      username,
+      (value) => value != null
+          ? Get.offAndToNamed('/home')
+          : Get.offAndToNamed('/login'),
+    );
+
     while (!Get.isRegistered<SharedPreferences>()) {
       await Future.delayed(const Duration(milliseconds: 10));
     }
+
     username.value = Get.find<SharedPreferences>().getString('username');
     (username.value != null)
         ? change(await graphQlProvider.auth(username.value!),
