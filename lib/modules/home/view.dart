@@ -57,7 +57,11 @@ class HomeView extends GetView<HomeController> {
             BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
           ],
           currentIndex: controller.page.value,
-          onTap: (i) => controller.pageController.jumpToPage(i),
+          onTap: (i) => controller.pageController.animateToPage(
+            i,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          ),
         ),
       );
 
@@ -127,9 +131,9 @@ class HomeView extends GetView<HomeController> {
 
       return Stack(
         children: [
-          controller.isMobile.value ? Container() : navigatorObx,
+          Container(child: controller.isMobile.value ? null : navigatorObx),
           sideBar,
-          controller.isMobile.value ? navigatorObx : Container(),
+          Container(child: controller.isMobile.value ? navigatorObx : null),
         ],
       );
     });
