@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_example/modules/profile/module.dart';
+import 'package:getx_example/modules/home/navigation.dart';
+
+import 'profile/module.dart';
 
 import 'controller.dart';
 
@@ -11,41 +13,6 @@ class HomeView extends GetView<HomeController> {
   Widget build(context) {
     return LayoutBuilder(builder: (context, constraints) {
       controller.isMobile.value = (constraints.maxWidth < 500);
-
-      final navigation = Navigator(
-        key: Get.nestedKey(1),
-        initialRoute: '/',
-        observers: [controller.observer],
-        onGenerateRoute: (RouteSettings settings) {
-          HomeController controller = Get.find();
-
-          if (settings.name == '/') {
-            return GetPageRoute(
-              routeName: '/',
-              page: () => Obx(
-                () => controller.isMobile.value
-                    ? const Scaffold(
-                        backgroundColor: Colors.transparent,
-                      )
-                    : const Scaffold(
-                        body: Center(
-                          child: Text('123'),
-                        ),
-                      ),
-              ),
-            );
-          }
-
-          if (settings.name!.startsWith('/profile/')) {
-            final id = settings.name!.replaceAll('/profile/', '');
-
-            return GetPageRoute(
-              routeName: '/profile/$id',
-              page: () => ProfileView(id, key: ValueKey(id)),
-            );
-          }
-        },
-      );
 
       final navigationBar = Obx(
         () => BottomNavigationBar(
@@ -71,7 +38,9 @@ class HomeView extends GetView<HomeController> {
           children: users!
               .map((e) => ListTile(
                     title: Text(e.username),
-                    onTap: () => Get.toNamed('/profile/${e.id}', id: 1),
+                    onTap: () => Get.offNamedUntil(
+                        '/profile/${e.id}', ModalRoute.withName('/'),
+                        id: 1),
                   ))
               .toList(),
         ),
@@ -111,29 +80,17 @@ class HomeView extends GetView<HomeController> {
         ),
       );
 
-      final navigatorObx = Obx(
-        () => IgnorePointer(
-          ignoring: controller.routeStack.length == 1,
-          child: Row(
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: controller.isMobile.value
-                        ? 0
-                        : constraints.maxWidth * 0.4),
-                child: Container(),
-              ),
-              Expanded(child: navigation),
-            ],
-          ),
-        ),
-      );
-
       return Stack(
         children: [
-          Container(child: controller.isMobile.value ? null : navigatorObx),
+          Container(
+              child: controller.isMobile.value
+                  ? null
+                  : Navigation(controller: controller)),
           sideBar,
-          Container(child: controller.isMobile.value ? navigatorObx : null),
+          Container(
+              child: controller.isMobile.value
+                  ? Navigation(controller: controller)
+                  : null),
         ],
       );
     });

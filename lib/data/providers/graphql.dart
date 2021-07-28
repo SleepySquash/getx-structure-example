@@ -32,6 +32,7 @@ class GraphQlProvider {
 
   auth(String username) async {
     await Future.delayed(const Duration(milliseconds: 600));
-    return true;
+    final token = username;
+    return token;
   }
 }

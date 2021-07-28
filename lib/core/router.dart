@@ -2,9 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:getx_example/data/services/auth_service.dart';
 
-import '../modules/home/module.dart';
 import '../modules/auth/module.dart';
-import '../modules/profile/module.dart';
+import '../modules/home/module.dart';
+import '../modules/home/profile/module.dart';
 
 class AuthMiddleware extends GetMiddleware {
   AuthService? authService;

@@ -11,8 +11,25 @@ class AuthService extends GetxController with StateMixin<String> {
   var username = Rx<String?>(null);
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
+
+    _initService();
+  }
+
+  void _initService() async {
+    while (!Get.isRegistered<SharedPreferences>()) {
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+
+    username.value = Get.find<SharedPreferences>().getString('username');
+    (username.value != null)
+        ? {
+            change(await graphQlProvider.auth(username.value!),
+                status: RxStatus.success()),
+            Get.offAndToNamed('/home')
+          }
+        : change('', status: RxStatus.empty());
 
     ever(
       username,
@@ -20,22 +37,13 @@ class AuthService extends GetxController with StateMixin<String> {
           ? Get.offAndToNamed('/home')
           : Get.offAndToNamed('/login'),
     );
-
-    while (!Get.isRegistered<SharedPreferences>()) {
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-
-    username.value = Get.find<SharedPreferences>().getString('username');
-    (username.value != null)
-        ? change(await graphQlProvider.auth(username.value!),
-            status: RxStatus.success())
-        : change('', status: RxStatus.empty());
   }
 
   void login(String username) async {
     change('', status: RxStatus.loading());
     final result = await graphQlProvider.auth(username);
-    if (result) {
+    if (result != null) {
+      Get.find<SharedPreferences>().setString('username', username);
       change('', status: RxStatus.success());
       this.username.value = username;
     } else {
@@ -45,6 +53,7 @@ class AuthService extends GetxController with StateMixin<String> {
 
   void logout() async {
     change('', status: RxStatus.empty());
+    Get.find<SharedPreferences>().remove('username');
     username.value = null;
   }
 }
