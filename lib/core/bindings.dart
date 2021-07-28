@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx_example/data/providers/graphql.dart';
-import 'package:getx_example/data/services/auth_service.dart';
+import 'package:getx_example/data/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalBinding extends Bindings {

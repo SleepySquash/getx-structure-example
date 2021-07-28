@@ -30,13 +30,19 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  # The 'get' package is a powerful state management, navigation, dependency
+  # injection solution and much more.
   get: ^4.3.0
 
+  # The 'uuid' package generates UUID's.
   uuid: ^3.0.4
 
+  # The 'shared_preferences' package saves and loads data from and to
+  # the persistent storage.
   shared_preferences: ^2.0.6
 
+  # The 'expandable' package lets us easily create expandable list.
+  expandable: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

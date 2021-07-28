@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'chat/view.dart';
 import 'module.dart';
 import 'profile/module.dart';
 
@@ -26,9 +27,9 @@ class Navigation extends StatelessWidget {
                   ? const Scaffold(
                       backgroundColor: Colors.transparent,
                     )
-                  : const Scaffold(
+                  : Scaffold(
                       body: Center(
-                        child: Text('123'),
+                        child: Text('Choose a chat or a user'.tr),
                       ),
                     ),
             ),
@@ -41,6 +42,15 @@ class Navigation extends StatelessWidget {
           return GetPageRoute(
             settings: RouteSettings(name: '/profile/$id'),
             page: () => ProfileView(id, key: ValueKey(id)),
+          );
+        }
+
+        if (settings.name!.startsWith('/chat/')) {
+          final id = settings.name!.replaceAll('/chat/', '');
+
+          return GetPageRoute(
+            settings: RouteSettings(name: '/chat/$id'),
+            page: () => ChatView(id, key: ValueKey(id)),
           );
         }
       },
@@ -56,7 +66,9 @@ class Navigation extends StatelessWidget {
                 constraints: BoxConstraints(
                     maxWidth: controller.isMobile.value
                         ? 0
-                        : constraints.maxWidth * 0.4),
+                        : constraints.maxWidth > 860
+                            ? 345
+                            : constraints.maxWidth * 0.4),
                 child: Container(),
               ),
               Expanded(child: navigation),

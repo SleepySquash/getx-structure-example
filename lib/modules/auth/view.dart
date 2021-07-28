@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../data/services/auth_service.dart';
+import '../../data/services/auth.dart';
 import 'controller.dart';
 
 class AuthView extends GetView<AuthController> {

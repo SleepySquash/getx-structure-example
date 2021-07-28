@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_example/data/models/user.dart';
 import 'package:getx_example/data/repositories/users.dart';
-import 'package:getx_example/data/services/auth_service.dart';
+import 'package:getx_example/data/services/auth.dart';
 
 class MyNavigatorObserver extends NavigatorObserver {
   MyNavigatorObserver({required this.routeStack});

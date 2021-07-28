@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:getx_example/data/models/user.dart';
-import 'package:getx_example/data/providers/graphql.dart';
+import '../models/user.dart';
+import '../providers/graphql.dart';
 
 class UsersRepository {
   const UsersRepository({required this.graphqlProvider});
