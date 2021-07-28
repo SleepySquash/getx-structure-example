@@ -9,36 +9,45 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-        actions: [
-          IconButton(
-            onPressed: () => controller.logout(),
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: PageView(
-        controller: controller.pageController,
-        onPageChanged: (i) => controller.page.value = i,
-        children: [
-          const Text('Contacts'),
-          controller.obx(
-            (users) => ListView(
-              children: users!
-                  .map((e) => ListTile(
-                        title: Text(e.username),
-                        onTap: () => Get.toNamed('/profile/${e.id}'),
-                      ))
-                  .toList(),
-            ),
-            onEmpty: const Center(child: Text('No users')),
-          ),
-          const Text('Menu'),
-        ],
-      ),
-      bottomNavigationBar: Obx(
+    return LayoutBuilder(builder: (context, constraints) {
+      controller.isMobile.value = (constraints.maxWidth < 500);
+
+      final navigation = Navigator(
+        key: Get.nestedKey(1),
+        initialRoute: '/',
+        observers: [controller.observer],
+        onGenerateRoute: (RouteSettings settings) {
+          HomeController controller = Get.find();
+
+          if (settings.name == '/') {
+            return GetPageRoute(
+              routeName: '/',
+              page: () => Obx(
+                () => controller.isMobile.value
+                    ? const Scaffold(
+                        backgroundColor: Colors.transparent,
+                      )
+                    : const Scaffold(
+                        body: Center(
+                          child: Text('123'),
+                        ),
+                      ),
+              ),
+            );
+          }
+
+          if (settings.name!.startsWith('/profile/')) {
+            final id = settings.name!.replaceAll('/profile/', '');
+
+            return GetPageRoute(
+              routeName: '/profile/$id',
+              page: () => ProfileView(id, key: ValueKey(id)),
+            );
+          }
+        },
+      );
+
+      final navigationBar = Obx(
         () => BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
@@ -50,11 +59,79 @@ class HomeView extends GetView<HomeController> {
           currentIndex: controller.page.value,
           onTap: (i) => controller.pageController.jumpToPage(i),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.refresh),
-        onPressed: controller.updateUsers,
-      ),
-    );
+      );
+
+      const contactsPage = Text('Contacts');
+      final chatsPage = controller.obx(
+        (users) => ListView(
+          children: users!
+              .map((e) => ListTile(
+                    title: Text(e.username),
+                    onTap: () => Get.toNamed('/profile/${e.id}', id: 1),
+                  ))
+              .toList(),
+        ),
+        onEmpty: const Center(child: Text('No users')),
+      );
+      const menuPage = Text('Menu');
+
+      final sideBar = ConstrainedBox(
+        constraints: BoxConstraints(
+            maxWidth: controller.isMobile.value
+                ? constraints.maxWidth
+                : constraints.maxWidth * 0.4),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Home"),
+            actions: [
+              IconButton(
+                onPressed: () => controller.logout(),
+                icon: const Icon(Icons.logout),
+              ),
+            ],
+          ),
+          body: PageView(
+            controller: controller.pageController,
+            onPageChanged: (i) => controller.page.value = i,
+            children: [
+              contactsPage,
+              chatsPage,
+              menuPage,
+            ],
+          ),
+          bottomNavigationBar: navigationBar,
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.refresh),
+            onPressed: controller.updateUsers,
+          ),
+        ),
+      );
+
+      final navigatorObx = Obx(
+        () => IgnorePointer(
+          ignoring: controller.routeStack.length == 1,
+          child: Row(
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxWidth: controller.isMobile.value
+                        ? 0
+                        : constraints.maxWidth * 0.4),
+                child: Container(),
+              ),
+              Expanded(child: navigation),
+            ],
+          ),
+        ),
+      );
+
+      return Stack(
+        children: [
+          controller.isMobile.value ? Container() : navigatorObx,
+          sideBar,
+          controller.isMobile.value ? navigatorObx : Container(),
+        ],
+      );
+    });
   }
 }

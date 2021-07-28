@@ -42,10 +42,4 @@ final routes = [
     binding: AuthBinding(),
     middlewares: [AuthMiddleware()],
   ),
-  GetPage(
-    name: '/profile/:id',
-    page: () => const ProfileView(),
-    binding: ProfileBinding(),
-    middlewares: [AuthMiddleware()],
-  ),
 ];
