@@ -2,10 +2,10 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../core/l10n/_l10n.dart';
-import '../../data/services/auth.dart';
+import '../../../core/l10n/_l10n.dart';
+import '../../../data/services/auth.dart';
 
-import 'controller.dart';
+import '../controller.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({Key? key, required this.controller}) : super(key: key);

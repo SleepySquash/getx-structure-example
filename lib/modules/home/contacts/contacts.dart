@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'controller.dart';
+import '../controller.dart';
 
 class ContactsScreen extends StatelessWidget {
   const ContactsScreen({Key? key, required this.controller}) : super(key: key);
