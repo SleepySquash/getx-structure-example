@@ -44,6 +44,13 @@ dependencies:
   # The 'expandable' package lets us easily create expandable list.
   expandable: ^5.0.1
 
+  # The 'flutter_svg' package lets us use .svg files.
+  flutter_svg: ^0.22.0
+  flutter_svg_provider: ^0.1.9
+
+  # The 'flutter_slidable' let's us create slidable widgets.
+  flutter_slidable: ^0.6.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -69,6 +76,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/bg-gapopa.svg
+    - assets/images/gapopa-final.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
